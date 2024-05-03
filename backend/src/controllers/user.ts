@@ -1,17 +1,18 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Application, RequestHandler } from "express";
 import { PrismaClient } from "@prisma/client";
-import { Jwt, JwtPayload, Secret} from "jsonwebtoken";
+// import jwt
+import * as jose from 'jose'
+import * as jwt from "jsonwebtoken";
+// import { Jwt } from 'jsonwebtoken'
 import { signupSchema, signinSchema } from "../zod/user";
 
-// const jwt = require('jsonwebtoken')
-
-const app = express();
+const { sign } = jwt
 const prisma = new PrismaClient();
 
-
-app.post('/signup', async(req: Request, res: Response) => {
+export const signup: RequestHandler =  async(req: Request, res: Response) => {
     const header = req.body;
     const {success} = signupSchema.safeParse(header)
+    console.log(success)
 
     if(!success) {
         return res.status(411).json({
@@ -41,5 +42,11 @@ app.post('/signup', async(req: Request, res: Response) => {
 
     const userId = createUser.id
 
-    // const token = 
-})
+    const payload = `${userId}`
+
+    // const secret = process.env.JWT_SECRET;
+    const token = sign(payload, "my-secret")
+
+    console.log(token)
+     
+}
