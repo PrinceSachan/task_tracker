@@ -1,22 +1,14 @@
-import express, { Request, Response, Application, RequestHandler } from "express";
+import { Request, Response, RequestHandler } from "express";
 import { PrismaClient } from "@prisma/client";
-// import jwt
-import * as jose from 'jose'
-import * as jwt from "jsonwebtoken";
-// import { Jwt } from 'jsonwebtoken'
+import { JwtPayload, sign } from "jsonwebtoken";
 import { signupSchema, signinSchema } from "../zod/user";
 
-const { sign } = jwt
 const prisma = new PrismaClient();
 
 export const signup: RequestHandler =  async(req: Request, res: Response) => {
     try {
-
-    
-        const header = req.body;
-        console.log(header)
-        const {success} = signupSchema.safeParse(header)
-        console.log(success)
+        const body = req.body;
+        const {success} = signupSchema.safeParse(body)
 
         if(!success) {
             return res.status(411).json({
@@ -26,7 +18,7 @@ export const signup: RequestHandler =  async(req: Request, res: Response) => {
 
         const isUserExist = await prisma.user.findUnique({
             where: {
-                email: header.email
+                email: body.email
             }
         })
 
@@ -38,27 +30,65 @@ export const signup: RequestHandler =  async(req: Request, res: Response) => {
 
         const createUser = await prisma.user.create({
             data: {
-                email: header.email,
-                password: header.password,
-                name: header.name
+                email: body.email,
+                password: body.password,
+                name: body.name
             }
         })
 
-        const userId = createUser.id
+        const payload: JwtPayload = { userId: createUser.id }
+        const signature: string = process.env.JWT_SECRET as string
+        const token = sign(payload, signature)
 
-        const payload = `${userId}`
-
-        // const secret = process.env.JWT_SECRET;
-        const token = sign(payload, "my-secret")
-
-        console.log(token)
-
-        return res.json({
-            token
+        res.json({
+            message: 'User created successfully',
+            token,
+            createUser
         });
     }
     catch (e) {
         console.log(e)
+    }  
+}
+
+export const signin: RequestHandler = async(req:Request, res: Response) => {
+    try {
+        const body = req.body;
+        const { success } = signinSchema.safeParse(body)
+
+        if(!success) {
+            return res.status(411).json({
+                message: 'Invalied credentials'
+            })
+        }
+
+        const isUserExist = await prisma.user.findUnique({
+            where: {
+                email: body.email
+            }
+        })
+
+        if(!isUserExist){
+            return res.status(411).json({
+                message: 'User not found'
+            })
+        }
+
+        const payload: JwtPayload = { userId: isUserExist.id }
+        const signature: string = process.env.JWT_SECRET as string;
+
+        const token = sign(payload, signature)
+
+        res.json({
+            message: 'User logged in',
+            token,
+            isUserExist
+        })
+
     }
-     
+    catch(err) {
+        return res.status(411).json({
+            message: `Error while logging in ${err}`
+        })
+    }
 }
