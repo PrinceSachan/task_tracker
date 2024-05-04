@@ -41,6 +41,7 @@ const { sign } = jwt;
 const prisma = new client_1.PrismaClient();
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const header = req.body;
+    console.log(header);
     const { success } = user_1.signupSchema.safeParse(header);
     console.log(success);
     if (!success) {
@@ -70,5 +71,8 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const secret = process.env.JWT_SECRET;
     const token = sign(payload, "my-secret");
     console.log(token);
+    return res.json({
+        token
+    });
 });
 exports.signup = signup;

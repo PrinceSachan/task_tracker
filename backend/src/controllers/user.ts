@@ -10,43 +10,55 @@ const { sign } = jwt
 const prisma = new PrismaClient();
 
 export const signup: RequestHandler =  async(req: Request, res: Response) => {
-    const header = req.body;
-    const {success} = signupSchema.safeParse(header)
-    console.log(success)
+    try {
 
-    if(!success) {
-        return res.status(411).json({
-            message: 'Invalid credentials'
-        })
-    }
+    
+        const header = req.body;
+        console.log(header)
+        const {success} = signupSchema.safeParse(header)
+        console.log(success)
 
-    const isUserExist = await prisma.user.findUnique({
-        where: {
-            email: header.email
+        if(!success) {
+            return res.status(411).json({
+                message: 'Invalid credentials'
+            })
         }
-    })
 
-    if(isUserExist){
-        return res.status(411).json({
-            message: 'Email is already taken'
+        const isUserExist = await prisma.user.findUnique({
+            where: {
+                email: header.email
+            }
         })
-    }
 
-    const createUser = await prisma.user.create({
-        data: {
-            email: header.email,
-            password: header.password,
-            name: header.name
+        if(isUserExist){
+            return res.status(411).json({
+                message: 'Email is already taken'
+            })
         }
-    })
 
-    const userId = createUser.id
+        const createUser = await prisma.user.create({
+            data: {
+                email: header.email,
+                password: header.password,
+                name: header.name
+            }
+        })
 
-    const payload = `${userId}`
+        const userId = createUser.id
 
-    // const secret = process.env.JWT_SECRET;
-    const token = sign(payload, "my-secret")
+        const payload = `${userId}`
 
-    console.log(token)
+        // const secret = process.env.JWT_SECRET;
+        const token = sign(payload, "my-secret")
+
+        console.log(token)
+
+        return res.json({
+            token
+        });
+    }
+    catch (e) {
+        console.log(e)
+    }
      
 }
