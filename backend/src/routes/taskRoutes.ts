@@ -4,7 +4,7 @@ import authMiddleware from "../middleware/authMiddleware";
 
 const taskRouter: Router = express.Router();
 
-// taskRouter.post('/task/createTask', authMiddleware, createTask);
+taskRouter.post('/task/createTask', authMiddleware, createTask);
 // userRouter.post('/user/signin', signin);
 
 export default taskRouter;

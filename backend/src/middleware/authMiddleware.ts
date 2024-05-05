@@ -20,7 +20,7 @@ const authMiddleware = async(req: Request, res: Response, next: NextFunction) =>
         const decode = jwt.verify(token, secret) as any;
 
         const userId = await prisma.user.findUnique({ where: { id: decode.userId }});
-        req.user = userId
+        req.user.id = decode.userId
         next()
     }
     catch (err){
