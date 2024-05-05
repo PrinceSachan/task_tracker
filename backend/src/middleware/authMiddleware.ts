@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { verify, JwtPayload, decode } from "jsonwebtoken";
+import { PrismaClient } from "@prisma/client";
+import * as jwt from 'jsonwebtoken'
 
-// export interface CustomRequest extends Request {
-//     token: string | JwtPayload;
-// }
+const prisma = new PrismaClient();
 
-
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware = async(req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
     if(!authHeader || !authHeader.startsWith('Bearer ')){
@@ -16,15 +14,14 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const token = authHeader.split(' ')[1];
-    // const payload: string = decode(token) as string
-    const signature: string = process.env.JWT_SECRET as string;
-
+    
     try{
-        const verification = verify(token, signature);
+        const secret = process.env.JWT_SECRET as string;
+        const decode = jwt.verify(token, secret) as any;
 
-        // const decoded = decode(verification) as string | JwtPayload
-        // const userId = decoded.userId
-        
+        const userId = await prisma.user.findUnique({ where: { id: decode.userId }});
+        req.user = userId
+        next()
     }
     catch (err){
         return res.status(403).json({

@@ -1,6 +1,6 @@
-import { Request, Response, RequestHandler } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { JwtPayload, sign } from "jsonwebtoken";
+import * as jwt from 'jsonwebtoken'
 import { signupSchema, signinSchema } from "../zod/user";
 
 const prisma = new PrismaClient();
@@ -36,9 +36,10 @@ export const signup: RequestHandler =  async(req: Request, res: Response) => {
             }
         })
 
-        const payload: JwtPayload = { userId: createUser.id }
-        const signature: string = process.env.JWT_SECRET as string
-        const token = sign(payload, signature)
+        const secret = process.env.JWT_SECRET as string
+        const token = jwt.sign({
+            userId: createUser.id
+        }, secret)
 
         res.json({
             message: 'User created successfully',
@@ -46,8 +47,10 @@ export const signup: RequestHandler =  async(req: Request, res: Response) => {
             createUser
         });
     }
-    catch (e) {
-        console.log(e)
+    catch (err) {
+        return res.status(411).json({
+            message: `Error while Signing up ${err}`
+        })
     }  
 }
 
@@ -74,10 +77,10 @@ export const signin: RequestHandler = async(req:Request, res: Response) => {
             })
         }
 
-        const payload: JwtPayload = { userId: isUserExist.id }
-        const signature: string = process.env.JWT_SECRET as string;
-
-        const token = sign(payload, signature)
+        const secret = process.env.JWT_SECRET as string;
+        const token = jwt.sign({
+            userId: isUserExist.id
+        }, secret)
 
         res.json({
             message: 'User logged in',
