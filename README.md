@@ -15,4 +15,15 @@ Prisma as ORM
 Postgres as database
 ```
 
+## Frontend
+
+Frontend build with
+
+```bash
+React
+Typescript
+shadcn
+tailwind
+```
+
 [MIT](https://choosealicense.com/licenses/mit/)
