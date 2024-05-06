@@ -1,8 +1,15 @@
-import { User } from '@prisma/client'
-import express from 'express'
+import { User } from "@prisma/client";
 
-declare module 'express-serve-static-core' {
-    export interface Request {
-      user: User;
-    }
-  }
+// declare global {
+//     namespace Express {
+//       interface Request {
+//         user: User
+//       }
+//     }
+//   }
+
+// declare module 'express-serve-static-core' {
+//     interface Request {
+//         user: User;
+//     }
+// }

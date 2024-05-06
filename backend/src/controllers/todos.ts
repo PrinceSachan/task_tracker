@@ -4,7 +4,11 @@ import { taskSchema } from "../zod/task";
 
 const prisma = new PrismaClient();
 
-export const createTask: RequestHandler = async(req: Request, res: Response) => {
+interface MyUserRequest extends Request {
+    user?: User
+}
+
+export const createTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
     try {
         const body = req.body;
         const { success } = taskSchema.safeParse(body);
@@ -14,8 +18,11 @@ export const createTask: RequestHandler = async(req: Request, res: Response) => 
             })
         }
 
-        // const userId = req.user.id as unknown as number
-        const isUserExit = await prisma.user.findUnique({ where: {id: req.user.id}})
+        const isUserExit = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
         if(!isUserExit){
             return res.status(411).json({
                 message: `User not found`
@@ -24,8 +31,8 @@ export const createTask: RequestHandler = async(req: Request, res: Response) => 
 
         const taskCreation = await prisma.todos.create({
             data: {
-                userId: req.user.id,
-                title: body.email,
+                userId: isUserExit.id,
+                title: body.title,
                 description: body.description
             }
         })
