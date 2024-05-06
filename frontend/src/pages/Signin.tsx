@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,24 +10,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-const Signup = () => {
+const Signin = () => {
   return (
     <div className='flex h-screen justify-center items-center'>
-      <div>
+      <div className="">
           <Card className="w-[350px]">
             <div className='flex justify-center'>
               <CardHeader>
-                <CardTitle>Sign Up</CardTitle>
+                <CardTitle>Sign In</CardTitle>
               </CardHeader>
             </div>
             <div>
               <CardContent>
                 <form>
                   <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Enter your name" />
-                    </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="name">Email</Label>
                       <Input id="name" placeholder="Enter your email"/>
@@ -43,10 +38,10 @@ const Signup = () => {
             </div>
             <div>
               <CardFooter className="flex justify-center">
-                <Button className='w-full'>Sign up</Button>
+                <Button className="w-full">Sign in</Button>
               </CardFooter>
               <CardFooter className="flex justify-center">
-                <CardDescription>Already have an account? Signin</CardDescription>
+                <CardDescription>Don't have an account? <a href='#'>Signup</a></CardDescription>
               </CardFooter>
             </div>
         </Card>
@@ -55,4 +50,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Signin
