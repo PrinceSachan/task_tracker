@@ -86,6 +86,96 @@ export const getTask: RequestHandler = async(req: MyUserRequest, res: Response) 
     }
 }
 
+export const updateTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
+    try{
+        const isUserExit = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
+        if(!isUserExit) {
+            return res.status(411).json({
+                message: 'User not found'
+            })
+        }
+
+        const taskUpdate = await prisma.user.update({
+            where: {
+                id: isUserExit.id
+            },
+            data: {
+                todos: {
+                    update: {
+                        where: {
+                            id: req.body.id
+                        },
+                        data: {
+                            done: true
+                        }
+                    }
+                }
+            },
+            select: {
+                todos: true
+            }
+        })
+
+        res.json({
+            taskUpdate
+        })
+    }
+    catch (err) {
+        return res.status(411).json({
+            message: `Error while updating task ${err}`
+        })
+    }
+}
+
+export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
+    try {
+        const isUserExit = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
+        if(!isUserExit) {
+            return res.status(411).json({
+                message: 'User not found'
+            })
+        }
+
+        const allTaskUpdate = await prisma.user.update({
+            where: {
+                id: isUserExit.id
+            },
+            data: {
+                todos: {
+                    updateMany: {
+                        where: {
+                            done: false
+                        },
+                        data: {
+                            done: true
+                        }
+                    }
+                }
+            },
+            select: {
+                todos: true
+            }
+        })
+
+        res.json({
+            allTaskUpdate
+        })
+    }
+    catch (err) {
+        return res.status(411).json({
+            message: `Error while updating task ${err}`
+        })
+    }
+}
+
 export const getTasksAndUser: RequestHandler = async(req: MyUserRequest, res: Response) => {
     try{
         const isUserExit = await prisma.user.findUnique({
