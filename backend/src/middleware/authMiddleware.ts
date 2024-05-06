@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import * as jwt from 'jsonwebtoken'
-
-const prisma = new PrismaClient();
 
 interface MyUserRequest extends Request {
     user?: User
@@ -23,11 +21,8 @@ const authMiddleware = async(req: MyUserRequest, res: Response, next: NextFuncti
         const secret = process.env.JWT_SECRET as string;
         const decode = jwt.verify(token, secret) as any;
 
-        // const userId = await prisma.user.findUnique({ where: { id: decode.userId }});
-
         req.user = decode.userId
        
-
         next()
     }
     catch (err){
