@@ -26,11 +26,11 @@ const Signin = () => {
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="name">Email</Label>
-                      <Input id="name" placeholder="Enter your email"/>
+                      <Input id="email" placeholder="Enter your email"/>
                     </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="name">Password</Label>
-                      <Input id="name" placeholder="Enter your password" />
+                      <Input id="password" placeholder="Enter your password" />
                     </div>
                   </div>
                 </form>
