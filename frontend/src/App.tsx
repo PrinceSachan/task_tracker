@@ -13,8 +13,8 @@ function App() {
   return (
     <>
       <div className='bg-gray-200'>
-        <Navbar />
         <BrowserRouter>
+          <Navbar />
           <Routes>
             <Route path='/signup' element={<Signup />} />
             <Route path='/signin' element={<Signin />} />

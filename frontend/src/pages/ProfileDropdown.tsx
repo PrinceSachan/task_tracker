@@ -7,8 +7,19 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react"
 
-const ProfileDropdown = () => {
+interface Iprops {
+    setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+}
+
+const ProfileDropdown: FunctionComponent<Iprops> = (props: Iprops) => {
+    const navigate = useNavigate()
+
+    // useEffect(() => {
+
+    // })
     return (
         <div>
             <div>
@@ -29,12 +40,15 @@ const ProfileDropdown = () => {
                     </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => {
+                            window.localStorage.removeItem("token")
+                            navigate('/signin')
+                            props.setIsLoggedIn(false)
+                        }}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
