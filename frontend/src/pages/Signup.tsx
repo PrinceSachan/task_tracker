@@ -9,15 +9,21 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from 'axios'
+import { useAuth } from "@/hooks/useAuth"
 
 const Signup = () => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [name, setName] = useState<string>("")
   const navigate = useNavigate()
+  const {
+    name,
+    email,
+    password,
+    setName,
+    setEmail,
+    setPassword,
+    createUser
+  } = useAuth()
 
   function handleChangeEmail(e: ChangeEvent<HTMLInputElement>){
     setEmail(e.target.value)
@@ -27,21 +33,6 @@ const Signup = () => {
   }
   function handleChangeName(e: ChangeEvent<HTMLInputElement>){
     setName(e.target.value)
-  }
-
-  const signup = async() => {
-    try {
-      const res = await axios.post(`http://localhost:8080/api/v1/user/signup`, {
-        name,
-        email,
-        password
-      })
-      window.localStorage.setItem("token", res.data.token)
-      navigate('/dashboard')
-    }
-    catch (err) {
-      console.log(err)
-    }
   }
 
   function clickHanlder2() {
@@ -93,7 +84,7 @@ const Signup = () => {
             </div>
             <div>
               <CardFooter className="flex justify-center">
-                <Button className='w-full' onClick={signup}>Sign up</Button>
+                <Button className='w-full' onClick={createUser}>Sign up</Button>
               </CardFooter>
               <CardFooter className="flex justify-center">
                 <CardDescription>

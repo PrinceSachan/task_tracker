@@ -7,19 +7,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router-dom"
-import { Dispatch, FunctionComponent, SetStateAction, useEffect } from "react"
+import { useAuth } from "@/hooks/useAuth";
 
-interface Iprops {
-    setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}
+const ProfileDropdown = () => {
+    const {loggingout} = useAuth()
 
-const ProfileDropdown: FunctionComponent<Iprops> = (props: Iprops) => {
-    const navigate = useNavigate()
-
-    // useEffect(() => {
-
-    // })
     return (
         <div>
             <div>
@@ -44,11 +36,7 @@ const ProfileDropdown: FunctionComponent<Iprops> = (props: Iprops) => {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => {
-                            window.localStorage.removeItem("token")
-                            navigate('/signin')
-                            props.setIsLoggedIn(false)
-                        }}>Logout</DropdownMenuItem>
+                        <DropdownMenuItem onClick={loggingout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

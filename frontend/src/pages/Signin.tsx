@@ -10,13 +10,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
-import { useState, ChangeEvent } from "react"
-import axios from "axios"
+import { ChangeEvent } from "react"
+import { useAuth } from "@/hooks/useAuth"
 
 const Signin = () => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
   const navigate = useNavigate()
+  const {
+    email,
+    password,
+    setEmail,
+    setPassword,
+    login
+  } = useAuth()
 
   function handleChangeEmail(e: ChangeEvent<HTMLInputElement>){
     setEmail(e.target.value)
@@ -25,20 +30,7 @@ const Signin = () => {
     setPassword(e.target.value)
   }
 
-  const signin = async() => {
-    try{
-      const res = await axios.post(`http://localhost:8080/api/v1/user/signin`, {
-        email,
-        password
-      })
-      window.localStorage.setItem("token", res.data.token);
-      navigate('/dashboard')
-    }
-    catch(err) {
-      console.log(err)
-    }
-  }
-  function clickHanlder2 () {
+  function clickHanlder () {
     navigate('/signup');
   }
   return (
@@ -78,7 +70,7 @@ const Signin = () => {
             </div>
             <div>
               <CardFooter className="flex justify-center">
-                <Button className="w-full" onClick={signin}>Sign in</Button>
+                <Button className="w-full" onClick={login}>Sign in</Button>
               </CardFooter>
               <CardFooter className="flex justify-center">
                 <CardDescription>
@@ -86,7 +78,7 @@ const Signin = () => {
                   <Button
                     style={{padding: 0}} 
                     variant='link'
-                    onClick={clickHanlder2}
+                    onClick={clickHanlder}
                   >Sign up</Button>
                 </CardDescription>
               </CardFooter>
