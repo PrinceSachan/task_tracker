@@ -1,7 +1,11 @@
 import { Request, RequestHandler, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import * as jwt from 'jsonwebtoken'
-import { signupSchema, signinSchema } from "../zod/user";
+import { signupSchema, signinSchema, updateProfileSchema } from "../zod/user";
+
+interface MyUserRequest extends Request {
+    user?: User
+}
 
 const prisma = new PrismaClient();
 
@@ -92,6 +96,52 @@ export const signin: RequestHandler = async(req:Request, res: Response) => {
     catch(err) {
         return res.status(411).json({
             message: `Error while logging in ${err}`
+        })
+    }
+}
+
+export const updateProfile = async(req: MyUserRequest, res: Response) => {
+    try{
+        const userId = req.params.id
+        const body = req.body
+        
+
+        const { success } = updateProfileSchema.safeParse(body)
+        if(!success) {
+            return res.status(411).json({
+                message: 'Invalied credentials'
+            })
+        }
+
+        const isUserExist = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
+        if(!isUserExist) {
+            return res.status(411).json({
+                message: 'User does not exist'
+            })
+        }
+
+        const updateUserProfile = await prisma.user.update({
+            where: {
+                id: isUserExist.id
+            },
+            data: {
+                name: body.name,
+                password: body.password,
+            }
+        })
+
+        res.json({
+            message: 'User credentials have been update',
+            updateUserProfile
+        })
+    }
+    catch (err) {
+        return res.status(411).json({
+            message: 'Error while update profile'
         })
     }
 }

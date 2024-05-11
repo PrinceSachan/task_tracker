@@ -4,6 +4,7 @@ import ProfileDropdown from './ProfileDropdown'
 
 const Navbar = () => {
   const {isLoggedIn} = useAuthProvider()
+  console.log(isLoggedIn)
 
   return (
     <div>
