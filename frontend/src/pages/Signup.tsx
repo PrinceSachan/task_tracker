@@ -1,3 +1,4 @@
+// Imports
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -9,21 +10,27 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ChangeEvent } from "react"
+import { ChangeEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "@/hooks/useAuth"
+
+// App imports
+import { useAuthProvider } from "@/context/AuthContext"
 
 const Signup = () => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [name, setName] = useState<string>('')
   const navigate = useNavigate()
-  const {
-    name,
-    email,
-    password,
-    setName,
-    setEmail,
-    setPassword,
-    createUser
-  } = useAuth()
+  const { signUp, setIsLoggedIn } = useAuthProvider()
+
+  const handleSignUp = async () => {
+    await signUp(email, password, name);
+    if(localStorage.getItem('token')){
+      setIsLoggedIn(true);
+      navigate('/dashboard')
+    }
+}
+
 
   function handleChangeEmail(e: ChangeEvent<HTMLInputElement>){
     setEmail(e.target.value)
@@ -84,7 +91,7 @@ const Signup = () => {
             </div>
             <div>
               <CardFooter className="flex justify-center">
-                <Button className='w-full' onClick={createUser}>Sign up</Button>
+                <Button className='w-full' onClick={handleSignUp}>Sign up</Button>
               </CardFooter>
               <CardFooter className="flex justify-center">
                 <CardDescription>

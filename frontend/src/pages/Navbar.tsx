@@ -1,12 +1,9 @@
-// import React, { useEffect, useState } from 'react'
+// App imports
+import { useAuthProvider } from '@/context/AuthContext'
 import ProfileDropdown from './ProfileDropdown'
-import { useAuth } from '@/hooks/useAuth'
 
 const Navbar = () => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(true)
-  // console.log(isLoggedIn)
-  const {isLoggedIn} = useAuth()
-  console.log('loged out', isLoggedIn)
+  const {isLoggedIn} = useAuthProvider()
 
   return (
     <div>
@@ -16,10 +13,7 @@ const Navbar = () => {
                 Task_tracker
               </div>
               <div className='mt-2 mr-8'>
-                {!(window.localStorage.hasOwnProperty("token")) ? null : <ProfileDropdown />}
-                {/* {isLoggedIn ? <ProfileDropdown setIsLoggedIn={setIsLoggedIn} /> : null} */}
-                {/* {isLoggedIn? <ProfileDropdown /> : ''} */}
-                {/* <ProfileDropdown /> */}
+                {isLoggedIn ? <ProfileDropdown /> : null}
               </div>
             </nav>
         </div>

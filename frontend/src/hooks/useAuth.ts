@@ -1,56 +1,44 @@
+// Imports
+
 import { useState, Dispatch, SetStateAction } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-type AuthReturn = {
-    name: string | undefined;
-    email: string | undefined;
-    password: string | undefined;
-    isLoggedIn: boolean | undefined;
-    setName: Dispatch<SetStateAction<string | undefined>>;
-    setEmail: Dispatch<SetStateAction<string | undefined>>;
-    setPassword: Dispatch<SetStateAction<string | undefined>>;
-    // setIsLoggedIn: Dispatch<SetStateAction<boolean | undefined>>;
-    createUser: () => void
-    login: () => void
+export type AuthReturn = {
     loggingout: () => void
+    signUp: (email: string, password: string, name: string) => Promise<void>;
+    signIn: (email: string, password: string) => Promise<void>;
+    isLoggedIn: boolean;
+    setIsLoggedIn: Dispatch<SetStateAction<boolean>>
 }
 
 export function useAuth() : AuthReturn {
-    const [name, setName] = useState<string>()
-    const [email, setEmail] = useState<string>()
-    const [password, setPassword] = useState<string>()
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-    const navigate = useNavigate()
-
-    const createUser = async(): Promise<void> => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+      () => localStorage.getItem('token') !== null
+    )
+    
+    const signUp = async(email: string, password: string, name: string): Promise<void> => {
         try {
             const res = await axios.post(`http://localhost:8080/api/v1/user/signup`, {
-              name,
               email,
-              password
+              password,
+              name
             })
             console.log(res)
-            setIsLoggedIn(true)
-            window.localStorage.setItem("token", res.data.token)
-            navigate('/dashboard')
+            window.localStorage.setItem("token", res.data.token);
         }
         catch (err) {
             console.log(err)
         }
     }
 
-    const login = async(): Promise<void> => {
+    const signIn = async(email: string, password: string): Promise<void> => {
         try{
           const res = await axios.post(`http://localhost:8080/api/v1/user/signin`, {
             email,
             password
           })
           console.log(res)
-          setIsLoggedIn(true)
           window.localStorage.setItem("token", res.data.token);
-          navigate('/dashboard')
-          // return res.data.token
         }
         catch(err) {
           console.log(err)
@@ -58,23 +46,14 @@ export function useAuth() : AuthReturn {
     }
 
     const loggingout = ():void => {
-        console.log('logged out')
-        setIsLoggedIn(false)
-        window.localStorage.removeItem("token")
-        // if()
-        navigate('/signin')
+      window.localStorage.removeItem("token");
     }
 
     return {
-        name,
-        email,
-        password,
         isLoggedIn,
-        setEmail,
-        setName,
-        setPassword,
-        createUser,
-        login,
+        setIsLoggedIn,
+        signUp,
+        signIn,
         loggingout
     }
 }

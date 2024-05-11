@@ -1,3 +1,5 @@
+// Imports
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,18 +12,24 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
-import { ChangeEvent } from "react"
-import { useAuth } from "@/hooks/useAuth"
+import { ChangeEvent, useState } from "react"
+
+// Context import
+import { useAuthProvider } from "@/context/AuthContext"
 
 const Signin = () => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const navigate = useNavigate()
-  const {
-    email,
-    password,
-    setEmail,
-    setPassword,
-    login
-  } = useAuth()
+  const { signIn,setIsLoggedIn } = useAuthProvider()
+
+  const handleSignIn = async () => {
+    await signIn(email, password);
+    if(localStorage.getItem('token')){
+      setIsLoggedIn(true);
+      navigate('/dashboard')
+    }
+}
 
   function handleChangeEmail(e: ChangeEvent<HTMLInputElement>){
     setEmail(e.target.value)
@@ -30,9 +38,10 @@ const Signin = () => {
     setPassword(e.target.value)
   }
 
-  function clickHanlder () {
+  function clickHanlder2 () {
     navigate('/signup');
   }
+  
   return (
     <div className='flex h-screen justify-center items-center'>
       <div className="">
@@ -70,7 +79,7 @@ const Signin = () => {
             </div>
             <div>
               <CardFooter className="flex justify-center">
-                <Button className="w-full" onClick={login}>Sign in</Button>
+                <Button className="w-full" onClick={handleSignIn}>Sign in</Button>
               </CardFooter>
               <CardFooter className="flex justify-center">
                 <CardDescription>
@@ -78,7 +87,7 @@ const Signin = () => {
                   <Button
                     style={{padding: 0}} 
                     variant='link'
-                    onClick={clickHanlder}
+                    onClick={clickHanlder2}
                   >Sign up</Button>
                 </CardDescription>
               </CardFooter>

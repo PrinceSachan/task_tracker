@@ -1,3 +1,4 @@
+// Imports
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,10 +8,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
+// App imports
+import { useAuthProvider } from "@/context/AuthContext";
 
 const ProfileDropdown = () => {
-    const {loggingout} = useAuth()
+    const { loggingout, setIsLoggedIn } = useAuthProvider()
+    const navigate = useNavigate()
+    
+    const handleLogout = async() => {
+        await loggingout();
+        if(!localStorage.getItem('token')){
+            setIsLoggedIn(false);
+            navigate('/signin')
+        }
+    }
 
     return (
         <div>
@@ -36,7 +49,7 @@ const ProfileDropdown = () => {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={loggingout}>Logout</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
