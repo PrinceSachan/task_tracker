@@ -12,14 +12,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@radix-ui/react-label"
 
-type ProfileProps = {
-    user: {
-        name: string;
-        email: string;
-    }
-}
+// App imports
+import { useUpdateProfile } from "@/hooks/useUpdateProfile"
   
-const Profile = ({user}: ProfileProps) =>  {
+const Profile = () =>  {
+    const { user, getUser } = useUpdateProfile()
+
+    const handleClick = async() => {
+        await getUser()
+    }
 
     return (
         <div>
@@ -27,7 +28,7 @@ const Profile = ({user}: ProfileProps) =>  {
                 <AlertDialog>
                     <div>
                         <AlertDialogTrigger asChild>
-                            <Button>Show Profile</Button>
+                            <Button onClick={handleClick}>Show Profile</Button>
                         </AlertDialogTrigger>
                     </div>
                     <div>

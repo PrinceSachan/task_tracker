@@ -12,8 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 // App imports
 import { useAuthProvider } from "@/context/AuthContext";
-import UpdateProfile from "./UpdateProfile";
-import Profile from "./Profile";
 
 const ProfileDropdown = () => {
     const { loggingout, setIsAuthenticated } = useAuthProvider()
@@ -29,10 +27,6 @@ const ProfileDropdown = () => {
 
     const handleSetting = () => {
         navigate('/setting/user');
-    }
-
-    const handleProfile = () => {
-        navigate('/profile/user');
     }
 
     return (
@@ -56,8 +50,6 @@ const ProfileDropdown = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleProfile}>Profile</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleSetting}>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />

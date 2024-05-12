@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { CardContent, Card, CardHeader } from "@/components/ui/card"
-import { ChangeEvent, useEffect, useState } from "react"
-import axios from "axios"
-import { useAuthProvider } from "@/context/AuthContext"
+import { ChangeEvent, useState } from "react"
+
+// App imports
 import Profile from "./Profile"
 import { useUpdateProfile } from "@/hooks/useUpdateProfile"
 
@@ -13,26 +13,12 @@ const  UpdateProfile = () =>  {
     const [email, setEmail] = useState<string>('')
     const [name, setName] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const { user, updateUserProfile } = useUpdateProfile()
+    const { updateUserProfile } = useUpdateProfile()
 
     const handleUpdate = async() => {
-        await updateUserProfile(email, name, password)
+        await updateUserProfile(email, password, name)
     }
-    
-    // useEffect(() => {
-    //     const getUser = async() => {
-    //         const res = await axios.get(`http://localhost:8080/api/v1/user/:${userId}`, {
-    //             headers: {
-    //                 Authorization: "Bearer " + localStorage.getItem('token')
-    //             }
-    //         })
-    //         setUser({name: res.data.isUserExist.name, email: res.data.isUserExist.email})
-    //         }
-    //         getUser()
-
-    // }, [userId])
-
-
+  
     return (
         <div>
         <div className="px-4 space-y-6 sm:px-6 mt-6">
@@ -45,7 +31,6 @@ const  UpdateProfile = () =>  {
                             <Input 
                                 id="name" 
                                 placeholder="E.g. Jane Doe" 
-                                // defaultValue={user.name}
                                 value={name} 
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                             />
@@ -55,7 +40,6 @@ const  UpdateProfile = () =>  {
                             <Input 
                                 id="email" 
                                 placeholder="E.g. jane@example.com"
-                                // defaultValue={user.email}
                                 value={email}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             />
@@ -95,7 +79,7 @@ const  UpdateProfile = () =>  {
                         <Button onClick={handleUpdate}>Save</Button>
                     </div>
                     <div>
-                        <Profile user={user} />
+                        <Profile />
                     </div>
                 </div>
             </div>

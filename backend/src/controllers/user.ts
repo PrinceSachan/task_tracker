@@ -156,8 +156,8 @@ export const updateProfile = async(req: MyUserRequest, res: Response) => {
             },
             data: {
                 email: body.email,
-                name: body.name,
                 password: body.password,
+                name: body.name,
             }
         })
 
