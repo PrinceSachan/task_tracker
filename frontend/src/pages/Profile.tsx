@@ -14,13 +14,14 @@ import { Label } from "@radix-ui/react-label"
 
 // App imports
 import { useUpdateProfile } from "@/hooks/useUpdateProfile"
+import { useCallback } from "react"
   
 const Profile = () =>  {
     const { user, getUser } = useUpdateProfile()
 
-    const handleClick = async() => {
-        await getUser()
-    }
+   const handleClick = useCallback(() => {
+        getUser()
+   }, [user])
 
     return (
         <div>

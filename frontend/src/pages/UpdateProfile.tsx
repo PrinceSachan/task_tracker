@@ -17,6 +17,7 @@ const  UpdateProfile = () =>  {
 
     const handleUpdate = async() => {
         await updateUserProfile(email, password, name)
+        alert('User credentials have been updated.')
     }
   
     return (

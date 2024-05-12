@@ -1,5 +1,8 @@
+// Imports
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+// App imports
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 import Navbar from './pages/Navbar'
@@ -8,7 +11,6 @@ import { Dashboard } from './pages/Dashboard'
 import AuthContextProvider from './context/AuthContext'
 import UpdateProfile from './pages/UpdateProfile'
 import PrivateRoute from './routes/PrivateRoute'
-import Profile from './pages/Profile'
 
 function App() {
 

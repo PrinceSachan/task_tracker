@@ -1,8 +1,9 @@
 import { useAuthProvider } from "@/context/AuthContext"
 import axios from "axios"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export type UpdateProfileReturnsProps = {
+    loading: boolean;
     user: {name: string; email: string};
     updateUserProfile: (email: string, password: string, name: string) => Promise<void>;
     getUser: () => Promise<void>
@@ -14,6 +15,34 @@ export const useUpdateProfile = () : UpdateProfileReturnsProps => {
         name: '',
         email: ''
     })
+
+    const [loading, setLoading] = useState<boolean>(true);
+
+        // useEffect(() => {
+        //     let isCancelled = false;
+        //     if(isCancelled == false){
+        //         setLoading(true)
+        //         axios.get(`http://localhost:8080/api/v1/user/:${userId}`, {
+        //             headers: {
+        //                 Authorization: 'Bearer ' + localStorage.getItem('token')
+        //             }
+        //         })
+        //         .then(res => {
+        //             // console.log(res.data.isTask)
+        //             if(res) {
+        //                 setUser({name: res.data.isUserExist.name, email: res.data.isUserExist.email})
+        //             }
+        //             console.log(user)
+        //             // console.log('Data', res.data.isTask)
+        //         })
+        //         .catch(err => console.log(err))
+        //         .finally(() => setLoading(false))
+        //     }
+    
+        //     return () => { isCancelled = true }
+        // }, [])
+
+
 
     
     const getUser = async() => {
@@ -47,7 +76,8 @@ export const useUpdateProfile = () : UpdateProfileReturnsProps => {
 
     return {
         user,
+        getUser,
         updateUserProfile,
-        getUser
+        loading
     }
 }

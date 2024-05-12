@@ -12,11 +12,18 @@ import { useNavigate } from "react-router-dom";
 
 // App imports
 import { useAuthProvider } from "@/context/AuthContext";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+import { useEffect } from "react";
 
 const ProfileDropdown = () => {
     const { loggingout, setIsAuthenticated } = useAuthProvider()
+    const {  user, getUser } = useUpdateProfile()
     const navigate = useNavigate()
     
+    useEffect(() => {
+        getUser()
+    }, [])
+
     const handleLogout = async() => {
         await loggingout();
         if(!localStorage.getItem('token')){
@@ -37,15 +44,9 @@ const ProfileDropdown = () => {
                         <Button
                             variant="outline"
                             size="icon"
-                            className="overflow-hidden rounded-full"
+                            className="overflow-hidden rounded-full text-xl font-semibold"
                         >
-                            <img
-                            src="/placeholder-user.jpg"
-                            width={36}
-                            height={36}
-                            alt="Avatar"
-                            className="overflow-hidden rounded-full"
-                            />
+                            {user.name[0]}
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

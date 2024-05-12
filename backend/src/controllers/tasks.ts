@@ -29,11 +29,11 @@ export const createTask: RequestHandler = async(req: MyUserRequest, res: Respons
             })
         }
 
-        const taskCreation = await prisma.todos.create({
+        const taskCreation = await prisma.tasks.create({
             data: {
                 userId: isUserExit.id,
                 title: body.title,
-                description: body.description
+                description: body.description,
             }
         })
 
@@ -62,7 +62,7 @@ export const getTask: RequestHandler = async(req: MyUserRequest, res: Response) 
             })
         }
 
-        const isTask = await prisma.todos.findMany({
+        const isTask = await prisma.tasks.findMany({
             where: {
                 userId: isUserExit.id
             },
@@ -70,12 +70,13 @@ export const getTask: RequestHandler = async(req: MyUserRequest, res: Response) 
                 id: true,
                 title: true,
                 description: true,
-                done: true
+                done: true,
+                createdAt: true
             }
         })
 
         res.json({
-            message: "All todos from selected user",
+            message: "All tasks from selected user",
             isTask
         })
     }
@@ -104,7 +105,7 @@ export const updateTask: RequestHandler = async(req: MyUserRequest, res: Respons
                 id: isUserExit.id
             },
             data: {
-                todos: {
+                tasks: {
                     update: {
                         where: {
                             id: req.body.id
@@ -116,7 +117,7 @@ export const updateTask: RequestHandler = async(req: MyUserRequest, res: Respons
                 }
             },
             select: {
-                todos: true
+                tasks: true
             }
         })
 
@@ -149,7 +150,7 @@ export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Resp
                 id: isUserExit.id
             },
             data: {
-                todos: {
+                tasks: {
                     updateMany: {
                         where: {
                             done: false
@@ -161,7 +162,7 @@ export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Resp
                 }
             },
             select: {
-                todos: true
+                tasks: true
             }
         })
 
@@ -194,7 +195,7 @@ export const getTasksAndUser: RequestHandler = async(req: MyUserRequest, res: Re
                 id: isUserExit?.id
             },
             include: {
-                todos: {
+                tasks: {
                     select: {
                         id: true,
                         title: true,
