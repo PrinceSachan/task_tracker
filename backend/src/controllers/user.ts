@@ -100,6 +100,32 @@ export const signin: RequestHandler = async(req:Request, res: Response) => {
     }
 }
 
+export const getUser = async(req: MyUserRequest, res: Response) => {
+    try {
+        const userId = req.params.id
+        const isUserExist = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
+        if(!isUserExist){
+            return res.status(411).json({
+                message: 'User not found'
+            })
+        }
+
+        res.json({
+            message: 'User found',
+            isUserExist
+        })
+    }
+    catch (err) {
+        return res.status(411).json({
+            message: 'Error while fetching user information'
+        })
+    }
+}
+
 export const updateProfile = async(req: MyUserRequest, res: Response) => {
     try{
         const userId = req.params.id
@@ -122,13 +148,14 @@ export const updateProfile = async(req: MyUserRequest, res: Response) => {
             return res.status(411).json({
                 message: 'User does not exist'
             })
-        }
+        } 
 
         const updateUserProfile = await prisma.user.update({
             where: {
                 id: isUserExist.id
             },
             data: {
+                email: body.email,
                 name: body.name,
                 password: body.password,
             }
@@ -136,7 +163,7 @@ export const updateProfile = async(req: MyUserRequest, res: Response) => {
 
         res.json({
             message: 'User credentials have been update',
-            updateUserProfile
+            updateUserProfile,
         })
     }
     catch (err) {

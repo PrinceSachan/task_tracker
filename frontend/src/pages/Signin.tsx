@@ -21,12 +21,12 @@ const Signin = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const navigate = useNavigate()
-  const { signIn,setIsLoggedIn } = useAuthProvider()
+  const { signIn,setIsAuthenticated } = useAuthProvider()
 
   const handleSignIn = async () => {
     await signIn(email, password);
     if(localStorage.getItem('token')){
-      setIsLoggedIn(true);
+      setIsAuthenticated(true);
       navigate('/dashboard')
     }
 }

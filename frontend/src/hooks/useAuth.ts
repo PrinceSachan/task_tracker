@@ -7,14 +7,16 @@ export type AuthReturn = {
     loggingout: () => void
     signUp: (email: string, password: string, name: string) => Promise<void>;
     signIn: (email: string, password: string) => Promise<void>;
-    isLoggedIn: boolean;
-    setIsLoggedIn: Dispatch<SetStateAction<boolean>>
+    userId: number | undefined;
+    isAuthenticated: boolean;
+    setIsAuthenticated: Dispatch<SetStateAction<boolean>>
 }
 
 export function useAuth() : AuthReturn {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-      () => localStorage.getItem('token') !== null
-    )
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    () => localStorage.getItem('token') !== null
+  )
+  const [userId, setUserId] = useState<number>()
     
     const signUp = async(email: string, password: string, name: string): Promise<void> => {
         try {
@@ -24,6 +26,7 @@ export function useAuth() : AuthReturn {
               name
             })
             console.log(res)
+            setUserId(res.data.createUser.id)
             window.localStorage.setItem("token", res.data.token);
         }
         catch (err) {
@@ -38,6 +41,7 @@ export function useAuth() : AuthReturn {
             password
           })
           console.log(res)
+          setUserId(res.data.isUserExist.id)
           window.localStorage.setItem("token", res.data.token);
         }
         catch(err) {
@@ -50,10 +54,11 @@ export function useAuth() : AuthReturn {
     }
 
     return {
-        isLoggedIn,
-        setIsLoggedIn,
-        signUp,
-        signIn,
-        loggingout
+      userId,
+      isAuthenticated,
+      setIsAuthenticated,
+      signUp,
+      signIn,
+      loggingout
     }
 }

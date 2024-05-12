@@ -12,17 +12,27 @@ import { useNavigate } from "react-router-dom";
 
 // App imports
 import { useAuthProvider } from "@/context/AuthContext";
+import UpdateProfile from "./UpdateProfile";
+import Profile from "./Profile";
 
 const ProfileDropdown = () => {
-    const { loggingout, setIsLoggedIn } = useAuthProvider()
+    const { loggingout, setIsAuthenticated } = useAuthProvider()
     const navigate = useNavigate()
     
     const handleLogout = async() => {
         await loggingout();
         if(!localStorage.getItem('token')){
-            setIsLoggedIn(false);
+            setIsAuthenticated(false);
             navigate('/signin')
         }
+    }
+
+    const handleSetting = () => {
+        navigate('/setting/user');
+    }
+
+    const handleProfile = () => {
+        navigate('/profile/user');
     }
 
     return (
@@ -30,24 +40,26 @@ const ProfileDropdown = () => {
             <div>
                     <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="overflow-hidden rounded-full"
-                    >
-                        <img
-                        src="/placeholder-user.jpg"
-                        width={36}
-                        height={36}
-                        alt="Avatar"
-                        className="overflow-hidden rounded-full"
-                        />
-                    </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="overflow-hidden rounded-full"
+                        >
+                            <img
+                            src="/placeholder-user.jpg"
+                            width={36}
+                            height={36}
+                            alt="Avatar"
+                            className="overflow-hidden rounded-full"
+                            />
+                        </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleProfile}>Profile</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleSetting}>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>

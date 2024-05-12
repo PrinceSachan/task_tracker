@@ -3,8 +3,8 @@ import { useAuthProvider } from '@/context/AuthContext'
 import ProfileDropdown from './ProfileDropdown'
 
 const Navbar = () => {
-  const {isLoggedIn} = useAuthProvider()
-  console.log(isLoggedIn)
+  const {isAuthenticated} = useAuthProvider()
+  console.log(isAuthenticated)
 
   return (
     <div>
@@ -14,7 +14,7 @@ const Navbar = () => {
                 Task_tracker
               </div>
               <div className='mt-2 mr-8'>
-                {isLoggedIn ? <ProfileDropdown /> : null}
+                {isAuthenticated ? <ProfileDropdown /> : null}
               </div>
             </nav>
         </div>
