@@ -9,13 +9,9 @@ import {
 // App imports
 import TasksBoard from "./TasksBoard";
 import AddtaskCard from "./AddtaskCard";
+import { getTask } from "@/api/tasks";
 
-const tableRow = [
-  {
-      title: 'Do your laundry',
-      description: "I'll do laundry at 5pm."
-  }
-]
+
 
 export function Dashboard() {
 
@@ -36,12 +32,7 @@ export function Dashboard() {
                   </div>
                 </div>
                 <TabsContent value="all">
-                  {(tableRow.length == 0)? 
-                    <div className="text-xl font-semibold">
-                      You don't have any task, create a task by clicking Add Task button
-                    </div>
-                    : <TasksBoard />
-                  }
+                 <TasksBoard />
                 </TabsContent>
               </Tabs>
             </main>

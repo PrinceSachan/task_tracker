@@ -18,14 +18,19 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { format } from 'date-fns'
+import { enIN } from "date-fns/locale";
+
 
 // App imports
 import Loader from "./Loader"
-import { getTask } from "@/api/getTask"
+import { getTask } from "@/api/tasks"
 
 
 const TasksBoard = () => {
     const { tasks, loading } = getTask()
+
+    if(tasks?.length == 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
 
     if(loading) return <Loader />
 
@@ -49,10 +54,7 @@ const TasksBoard = () => {
                             <TableHead>Title</TableHead>
                             <TableHead>Description</TableHead>
                             <TableHead className="hidden md:table-cell">
-                                Start Task
-                            </TableHead>
-                            <TableHead className="hidden md:table-cell">
-                                Time Taken
+                                Details
                             </TableHead>
                             <TableHead className="hidden md:table-cell">
                                 Created at
@@ -76,13 +78,10 @@ const TasksBoard = () => {
                                                 {task.description}
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
-                                                <Button>Start</Button>
+                                                <Button>View</Button>
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
-                                                --
-                                            </TableCell>
-                                            <TableCell className="hidden md:table-cell">
-                                                {task.createdAt.toLocaleString()}
+                                                {format((task.createdAt), "dd MMMM yyyy HH:mm:ss", { locale: enIN })}
                                             </TableCell>
                                             <TableCell>
                                                 <Button variant={"outline"}><Trash2 size={20} /></Button>
