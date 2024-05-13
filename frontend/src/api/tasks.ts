@@ -9,9 +9,15 @@ export type TasksProps = {
     title: string;
 }
 
+export interface CreateTaskProps {
+    title: string;
+    description: string;
+}
+
 export const getTask = () => {
     const [tasks, setTasks] = useState<TasksProps []>();
     const [loading, setLoading] = useState<boolean>(true);
+    const [id, setId] = useState<number | undefined>()
 
         useEffect(() => {
             let isCancelled = false;
@@ -23,12 +29,17 @@ export const getTask = () => {
                     }
                 })
                 .then(res => {
-                    if(res) {
+                    if(res.data.isTask !== null) {
                         setTasks(res.data.isTask)
+                        console.log('Task length:', tasks?.length)
                     }
+                    console.log('Task length:', tasks?.length)
                 })
                 .catch(err => console.log(err))
-                .finally(() => setLoading(false))
+                .finally(() => {
+                    setLoading(false),
+                    console.log('Task length:', tasks?.length)
+                })
             }
     
             return () => { isCancelled = true }
@@ -38,4 +49,16 @@ export const getTask = () => {
         tasks, 
         loading,
     }
+}
+
+export const createTask = async(title: string, description: string): Promise<void> => {
+    // const [loading, setLoading] = useState<boolean>()
+    await axios.post(`http://localhost:8080/api/v1/task/createTask`, {
+        title,
+        description
+    },{
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+    })
 }

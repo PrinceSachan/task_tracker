@@ -25,10 +25,13 @@ import { enIN } from "date-fns/locale";
 // App imports
 import Loader from "./Loader"
 import { getTask } from "@/api/tasks"
+import { useCallback } from "react"
 
 
 const TasksBoard = () => {
     const { tasks, loading } = getTask()
+
+    
 
     if(tasks?.length == 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
 

@@ -13,8 +13,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { ChangeEvent, FormEvent, useCallback, useState } from "react"
+import { createTask, getTask } from "@/api/tasks"
 
 const AddtaskCard = () =>  {
+    const [title, setTitle] = useState<string>('')
+    const [description, setDescription] = useState<string>('')
+    // const { tasks } = getTask()
+
+    const handleSubmit = async() => {
+        await createTask(title, description)
+        await getTask()
+        setTitle('')
+        setDescription('')
+    }
   return (
     <div>
         <div>
@@ -39,23 +51,34 @@ const AddtaskCard = () =>  {
                             Title
                         </Label>
                         <Input
-                            id="name"
+                            id="title"
                             className="col-span-3"
                             placeholder="Enter you title"
+                            value={title}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                setTitle(e.target.value)
+                            }}
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="place-content-start">
+                        <Label htmlFor="description" className="place-content-start">
                             Description
                         </Label>
                         <Textarea 
                             placeholder="Enter your description"
                             className="col-span-3" 
+                            value={description}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                                setDescription(e.target.value)
+                            }}
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                <Button type="submit">Save</Button>
+                <Button 
+                    type="submit"
+                    onClick={handleSubmit}
+                >Save</Button>
                 </DialogFooter>
             </DialogContent>
             </Dialog>
