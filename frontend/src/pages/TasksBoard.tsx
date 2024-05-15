@@ -78,7 +78,10 @@ const TasksBoard = () => {
                                                     {task.title}
                                             </TableCell>
                                             <TableCell className="">
-                                                {task.description}
+                                                {
+                                                    task.description.length > 30 ? 
+                                                    `${task.description.substring(0, 30)}...` : `${task.description}`
+                                                }
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
                                                 <Button>View</Button>

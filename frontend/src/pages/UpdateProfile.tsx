@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { CardContent, Card, CardHeader } from "@/components/ui/card"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, MouseEvent } from "react"
 
 // App imports
 import Profile from "./Profile"
@@ -15,10 +15,16 @@ const  UpdateProfile = () =>  {
     const [password, setPassword] = useState<string>('')
     const { updateUserProfile } = useUpdateProfile()
 
-    const handleUpdate = async() => {
+    const handleUpdate = async(e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         await updateUserProfile(email, password, name)
         alert('User credentials have been updated.')
+        setName('');
+        setEmail('');
+        setPassword('')
     }
+
+    // if(loading) return <Loader />
   
     return (
         <div>

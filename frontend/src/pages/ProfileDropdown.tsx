@@ -12,17 +12,13 @@ import { useNavigate } from "react-router-dom";
 
 // App imports
 import { useAuthProvider } from "@/context/AuthContext";
-import { useUpdateProfile } from "@/hooks/useUpdateProfile";
-import { useEffect } from "react";
+// import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+// import { useEffect } from "react";
+import { User } from "lucide-react";
 
 const ProfileDropdown = () => {
     const { loggingout, setIsAuthenticated } = useAuthProvider()
-    const {  user, getUser } = useUpdateProfile()
     const navigate = useNavigate()
-    
-    useEffect(() => {
-        getUser()
-    }, [])
 
     const handleLogout = async() => {
         await loggingout();
@@ -46,7 +42,7 @@ const ProfileDropdown = () => {
                             size="icon"
                             className="overflow-hidden rounded-full text-xl font-semibold"
                         >
-                            {user.name[0]}
+                            <User />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

@@ -21,7 +21,7 @@ const Profile = () =>  {
 
    const handleClick = useCallback(() => {
         getUser()
-   }, [user])
+   }, [user.name])
 
     return (
         <div>
