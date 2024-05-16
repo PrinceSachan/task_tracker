@@ -1,7 +1,5 @@
 import axios from "axios"
-import { tr } from "date-fns/locale";
-import { title } from "process";
-import { useEffect, useState } from "react"
+import { EffectCallback, useState } from "react"
 
 export type TasksProps = {
     createdAt: string | number;
@@ -17,15 +15,17 @@ export interface CreateTaskProps {
 }
 
 export type GetTaskReturn = {
-    tasks: TasksProps[] | undefined;
+    tasks: TasksProps[];
     loading: boolean;
-    getTask: () => void;
-    createTask: () => void
+    getTask: () => void | EffectCallback;
+    createTask: () => void;
+    updateTask: () => void;
+    deleteTask: () => void;
 }
 
 export function task() {
     const [tasks, setTasks] = useState<TasksProps []>();
-    const [loading, setLoading] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(true);
 
     const getTask = async() => {
         try {
@@ -35,14 +35,11 @@ export function task() {
                 }
             })
             if(res){
-                // console.log(res)
                 setTasks(res.data.isTask)
                 setLoading(false)
             } else {
                 setLoading(true)
             }
-            // console.log(tasks);
-            // console.log(loading)
         }
         catch(err) {
             console.log(err)
@@ -59,11 +56,38 @@ export function task() {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             })
-            if(res) {
-                await getTask()
-            }
         }
         catch(err) {
+            console.log(err)
+        }
+    }
+
+    const updateTask = async(id: number) => {
+        try {
+            const res = await axios.put(`http://localhost:8080/api/v1/task/updateTask`, {
+                id
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+        }
+        catch(err) {
+            console.log(err)
+        }
+    }
+
+    const deleteTask = async(id: number) => {
+        try{
+            const res = await axios.delete(`http://localhost:8080/api/v1/task/deleteTask`, {
+                headers: { 
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    "Content-Length": [id].length
+                },
+                data: JSON.stringify(id)
+            })
+        }
+        catch (err) {
             console.log(err)
         }
     }
@@ -72,6 +96,8 @@ export function task() {
         tasks,
         loading, 
         getTask, 
-        createTask
+        createTask,
+        updateTask,
+        deleteTask
     }
 }

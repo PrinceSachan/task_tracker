@@ -14,21 +14,34 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ChangeEvent, FormEvent, useCallback, useState } from "react"
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react"
 import { task } from "@/api/tasks"
 import { ta } from "date-fns/locale"
+import { TabsList } from "@radix-ui/react-tabs"
 
 const AddtaskCard = () =>  {
+    const [isCancelled, setIsCancelled] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
     const [description, setDescription] = useState<string>('')
-    const { createTask } = task()
+    const { tasks,loading,  getTask, createTask } = task()
+
+    useEffect(() => {
+        getTask()
+    }, [])
+
+    // const memoTask = useCallback(() => {
+    //     getTask()
+    // }, [tasks])
 
     const handleSubmit = async() => {
         await createTask(title, description)
         setTitle('')
         setDescription('')
-        window.location.reload()
+        setIsCancelled(true)
+        // window.location.reload()
     }
+
+
   return (
     <div>
         <div>

@@ -109,7 +109,7 @@ export const getUser = async(req: MyUserRequest, res: Response) => {
             }
         })
         if(!isUserExist){
-            return res.status(411).json({
+            return res.json({
                 message: 'User not found'
             })
         }

@@ -132,6 +132,37 @@ export const updateTask: RequestHandler = async(req: MyUserRequest, res: Respons
     }
 }
 
+export const deleteTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
+    try{
+        const isUserExist = await prisma.user.findUnique({
+            where: {
+                id: req.user as any
+            }
+        })
+        if(!isUserExist){
+            return res.status(411).json({
+                message: 'User not found'
+            })
+        }
+
+        const deleteSelectedTask = await prisma.tasks.delete({
+            where: {
+                id: req.body.id
+            }, 
+        })
+
+        res.json({
+            message: 'task has been deleted',
+            deleteSelectedTask,
+        })
+    }
+    catch (err) {
+        return res.status(411).json({
+            message: `Error while updating task ${err}`
+        })
+    }
+}
+
 export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
     try {
         const isUserExit = await prisma.user.findUnique({
