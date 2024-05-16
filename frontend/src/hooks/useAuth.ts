@@ -24,13 +24,14 @@ export function useAuth() : AuthReturn {
               email,
               password,
               name
-            })
+            }
+          )
             console.log(res)
             setUserId(res.data.createUser.id)
             window.localStorage.setItem("token", res.data.token);
         }
         catch (err) {
-            console.log(err)
+          console.log(err)
         }
     }
 
@@ -39,7 +40,8 @@ export function useAuth() : AuthReturn {
           const res = await axios.post(`http://localhost:8080/api/v1/user/signin`, {
             email,
             password
-          })
+          }
+        )
           console.log(res)
           setUserId(res.data.isUserExist.id)
           window.localStorage.setItem("token", res.data.token);

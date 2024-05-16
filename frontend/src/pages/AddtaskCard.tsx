@@ -4,6 +4,7 @@ import { PlusCircle } from "lucide-react"
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -14,18 +15,19 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ChangeEvent, FormEvent, useCallback, useState } from "react"
-import { createTask, getTask } from "@/api/tasks"
+import { task } from "@/api/tasks"
+import { ta } from "date-fns/locale"
 
 const AddtaskCard = () =>  {
     const [title, setTitle] = useState<string>('')
     const [description, setDescription] = useState<string>('')
-    // const { tasks } = getTask()
+    const { createTask } = task()
 
     const handleSubmit = async() => {
         await createTask(title, description)
-        await getTask()
         setTitle('')
         setDescription('')
+        window.location.reload()
     }
   return (
     <div>
@@ -75,10 +77,11 @@ const AddtaskCard = () =>  {
                     </div>
                 </div>
                 <DialogFooter>
-                <Button 
+                    <DialogClose type="submit" onClick={handleSubmit}>Save</DialogClose>
+                 {/* <Button 
                     type="submit"
-                    onClick={handleSubmit}
-                >Save</Button>
+                    onClick={() => {handleSubmit()}}
+                >Save</Button> */}
                 </DialogFooter>
             </DialogContent>
             </Dialog>

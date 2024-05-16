@@ -6,7 +6,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -24,15 +23,22 @@ import { enIN } from "date-fns/locale";
 
 // App imports
 import Loader from "./Loader"
-import { getTask } from "@/api/tasks"
-import { useCallback } from "react"
-
+import { task } from "@/api/tasks"
+import { useEffect } from "react"
+import AlertBox from "./Alertbox"
 
 const TasksBoard = () => {
-    const { tasks, loading } = getTask()
-
+    const { tasks, loading, getTask } = task() 
+    useEffect(() => {
+        getTask()
+    }, [])
     
-
+    function handleClick() {
+        console.log('first')
+    }
+    
+    console.log(tasks)
+    console.log(loading)
     if(tasks?.length == 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
 
     if(loading) return <Loader />
@@ -84,7 +90,15 @@ const TasksBoard = () => {
                                                 }
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
-                                                <Button>View</Button>
+                                                <AlertBox 
+                                                    buttonProps="View"
+                                                    titleProps="Task"
+                                                    lable1="Title"
+                                                    label2="Description"
+                                                    val1={task.title}  
+                                                    val2={task.description} 
+                                                    handleClick={handleClick}
+                                                />
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
                                                 {format((task.createdAt), "dd MMMM yyyy HH:mm:ss", { locale: enIN })}
@@ -98,12 +112,6 @@ const TasksBoard = () => {
                         })}
                     </Table>
                     </CardContent>
-                    <CardFooter>
-                    <div className="text-xs text-muted-foreground">
-                        Showing <strong>1-5</strong> of <strong>32</strong>{" "}
-                        products
-                    </div>
-                    </CardFooter>
                 </Card>
             </div>
         </div>

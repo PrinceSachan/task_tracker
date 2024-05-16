@@ -1,4 +1,6 @@
 import axios from "axios"
+import { tr } from "date-fns/locale";
+import { title } from "process";
 import { useEffect, useState } from "react"
 
 export type TasksProps = {
@@ -14,51 +16,62 @@ export interface CreateTaskProps {
     description: string;
 }
 
-export const getTask = () => {
-    const [tasks, setTasks] = useState<TasksProps []>();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [id, setId] = useState<number | undefined>()
-
-        useEffect(() => {
-            let isCancelled = false;
-            if(isCancelled == false){
-                setLoading(true)
-                axios.get(`http://localhost:8080/api/v1/task/getTask`, {
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
-                    }
-                })
-                .then(res => {
-                    if(res.data.isTask !== null) {
-                        setTasks(res.data.isTask)
-                        console.log('Task length:', tasks?.length)
-                    }
-                    console.log('Task length:', tasks?.length)
-                })
-                .catch(err => console.log(err))
-                .finally(() => {
-                    setLoading(false),
-                    console.log('Task length:', tasks?.length)
-                })
-            }
-    
-            return () => { isCancelled = true }
-        }, [])
-
-    return {
-        tasks, 
-        loading,
-    }
+export type GetTaskReturn = {
+    tasks: TasksProps[] | undefined;
+    loading: boolean;
+    getTask: () => void;
+    createTask: () => void
 }
 
-export const createTask = async(title: string, description: string): Promise<void> => {
-    // const [loading, setLoading] = useState<boolean>()
-    await axios.post(`http://localhost:8080/api/v1/task/createTask`, {
-        title,
-        description
-    },{
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
+export function task() {
+    const [tasks, setTasks] = useState<TasksProps []>();
+    const [loading, setLoading] = useState<boolean>();
+
+    const getTask = async() => {
+        try {
+            const res = await axios.get(`http://localhost:8080/api/v1/task/getTask`, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            if(res){
+                // console.log(res)
+                setTasks(res.data.isTask)
+                setLoading(false)
+            } else {
+                setLoading(true)
+            }
+            // console.log(tasks);
+            // console.log(loading)
         }
-    })
+        catch(err) {
+            console.log(err)
+        }
+    }
+
+    const createTask = async(title: string, description: string) => {
+        try{
+            const res = await axios.post(`http://localhost:8080/api/v1/task/createTask`, {
+                title,
+                description
+            },{
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            if(res) {
+                await getTask()
+            }
+        }
+        catch(err) {
+            console.log(err)
+        }
+    }
+
+    return {
+        tasks,
+        loading, 
+        getTask, 
+        createTask
+    }
 }
