@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table"
 import { format } from 'date-fns'
 import { enIN } from "date-fns/locale";
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 
 
 // App imports
@@ -31,18 +31,24 @@ const TasksBoard = () => {
     const { tasks, loading, getTask, updateTask, deleteTask } = task();
 
    
-    useEffect(() => {
-        const fetchTask =  async() =>  {
-            // let isCancelled = false;
-            await getTask()
-        }
+    // useEffect(() => {
+    //     const fetchTask =  async() =>  {
+    //         // let isCancelled = false;
+    //         await getTask()
+    //     }
         
-        fetchTask()
-        // if(isCancelled == false){
-        //     getTask()
-        // }
-        // return () => { isCancelled = true }
-    }, [])
+    //     fetchTask()
+    //     // if(isCancelled == false){
+    //     //     getTask()
+    //     // }
+    //     // return () => { isCancelled = true }
+    // }, [])
+
+    // const memotask = useCallback(() => {
+    //     getTask()
+    // }, [])
+
+
     
     // function checkedHandler() {
     //     updateTask()

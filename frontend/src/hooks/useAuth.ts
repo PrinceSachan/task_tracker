@@ -40,7 +40,12 @@ export function useAuth() : AuthReturn {
           const res = await axios.post(`http://localhost:8080/api/v1/user/signin`, {
             email,
             password
-          },
+          }, 
+          // {
+          //   headers: {
+          //     "Content-Length": [email, password].length
+          //   }
+          // }
         )
           console.log(res)
           setUserId(res.data.isUserExist.id)

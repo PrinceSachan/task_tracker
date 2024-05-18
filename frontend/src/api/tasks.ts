@@ -68,7 +68,8 @@ export function task() {
                 id
             }, {
                 headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    "Content-Length": id.toLocaleString().length
                 }
             })
         }
