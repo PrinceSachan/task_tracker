@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table"
 import { format } from 'date-fns'
 import { enIN } from "date-fns/locale";
-import { useCallback, useEffect } from "react"
+import { MouseEventHandler, useEffect } from "react"
 
 
 // App imports
@@ -30,40 +30,33 @@ import AlertBox from "./Alertbox"
 const TasksBoard = () => {
     const { tasks, loading, getTask, updateTask, deleteTask } = task();
 
+    const length = tasks?.length
    
-    // useEffect(() => {
-    //     const fetchTask =  async() =>  {
-    //         // let isCancelled = false;
-    //         await getTask()
-    //     }
-        
-    //     fetchTask()
-    //     // if(isCancelled == false){
-    //     //     getTask()
-    //     // }
-    //     // return () => { isCancelled = true }
-    // }, [])
+    useEffect(() => {
+        const fetchTask =  async() =>  {
+            await getTask()
+        }
+        fetchTask()
+    }, [length])
 
-    // const memotask = useCallback(() => {
-    //     getTask()
-    // }, [])
-
-
-    
-    // function checkedHandler() {
-    //     updateTask()
-    // }
     function handleClick() {
         console.log('first')
     }
 
-    if(tasks?.length == 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
+    // async function handleDelete(id: number): Promise<any>{
+    //     await deleteTask(id)
+    // }
 
+    console.log("tasks",tasks)
+    console.log("loading",loading)
+    
+    if(tasks?.length === 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
+    
     if(loading) return <Loader />
 
     return (
-        <div>
-            <div>
+        // <div className="h-screen">
+            <>
                 <Card x-chunk="dashboard-06-chunk-0">
                     <CardHeader>
                     <CardTitle>Tasks</CardTitle>
@@ -97,7 +90,7 @@ const TasksBoard = () => {
                                     <TableBody key={task.id}>
                                         <TableRow>
                                                 <TableCell className="hidden sm:table-cell">
-                                                    <Checkbox id="term" checked={task.done} onCheckedChange={() => updateTask(task.id)} />
+                                                    <Checkbox id="term" checked={task.done} onCheckedChange={async() =>{ await updateTask(task.id), window.location.reload()}} />
                                                 </TableCell>
                                                 <TableCell className="font-medium">
                                                         {task.title}
@@ -122,8 +115,8 @@ const TasksBoard = () => {
                                                 <TableCell className="hidden md:table-cell">
                                                     {format((task.createdAt), "dd MMMM yyyy HH:mm:ss", { locale: enIN })}
                                                 </TableCell>
-                                                <TableCell>
-                                                    <Button variant={"outline"} onClick={() => deleteTask(task.id)}><Trash2 size={20} /></Button>
+                                                 <TableCell>
+                                                    <Trash2 size={20} onClick={async() =>{ console.log('Delete_Id:', task.id),  await deleteTask(task.id)}} />
                                                 </TableCell>
                                         </TableRow>
                                     </TableBody>
@@ -132,8 +125,8 @@ const TasksBoard = () => {
                         </Table>
                     </CardContent>
                 </Card>
-            </div>
-        </div>
+            </>
+        // </div>
     )
 }
 

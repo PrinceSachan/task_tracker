@@ -14,30 +14,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { task } from "@/api/tasks"
 import { ta } from "date-fns/locale"
 import { TabsList } from "@radix-ui/react-tabs"
 
 const AddtaskCard = () =>  {
-    const [isCancelled, setIsCancelled] = useState<boolean>(false)
+    const [isCancelled, setIsCancelled] = useState<boolean>(true)
     const [title, setTitle] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const { tasks,loading,  getTask, createTask } = task()
+    
+    // const memoTask = useMemo(() => {
+    //     async function fetchTask() {
+    //         await getTask()
+    //     }
+    //     fetchTask()
+    // }, [])
 
+    // const length = tasks?.length
+   
     useEffect(() => {
-        getTask()
-    }, [])
-
-    // const memoTask = useCallback(() => {
-    //     getTask()
-    // }, [tasks])
+        const fetchTask =  async() =>  {
+            await getTask()
+        }
+        fetchTask()
+    }, [isCancelled])
 
     const handleSubmit = async() => {
         await createTask(title, description)
         setTitle('')
         setDescription('')
-        setIsCancelled(true)
+        setIsCancelled(false)
+        // await getTask()
         // window.location.reload()
     }
 
@@ -91,10 +100,7 @@ const AddtaskCard = () =>  {
                 </div>
                 <DialogFooter>
                     <DialogClose type="submit" onClick={handleSubmit}>Save</DialogClose>
-                 {/* <Button 
-                    type="submit"
-                    onClick={() => {handleSubmit()}}
-                >Save</Button> */}
+                 
                 </DialogFooter>
             </DialogContent>
             </Dialog>

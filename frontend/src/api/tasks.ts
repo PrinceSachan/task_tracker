@@ -24,7 +24,7 @@ export type GetTaskReturn = {
 }
 
 export function task() {
-    const [tasks, setTasks] = useState<TasksProps []>();
+    const [tasks, setTasks] = useState<TasksProps[]>();
     const [loading, setLoading] = useState<boolean>(true);
 
     const getTask = async() => {
@@ -34,12 +34,8 @@ export function task() {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             })
-            if(res){
-                setTasks(res.data.isTask)
-                setLoading(false)
-            } else {
-                setLoading(true)
-            }
+            setTasks(res.data.isTask)
+            setLoading(false)
         }
         catch(err) {
             console.log(err)
@@ -56,6 +52,7 @@ export function task() {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             })
+            await getTask()
         }
         catch(err) {
             console.log(err)
@@ -69,9 +66,9 @@ export function task() {
             }, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token'),
-                    "Content-Length": id.toLocaleString().length
                 }
             })
+            await getTask()
         }
         catch(err) {
             console.log(err)
@@ -80,14 +77,13 @@ export function task() {
 
     const deleteTask = async(id: number) => {
         try{
-            const res = await axios.delete(`http://localhost:8080/api/v1/task/deleteTask`, {
-                headers: { 
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
-                    "Content-Length": [id].length
-                },
-                data: JSON.stringify(id)
+            const res = await axios.delete(`http://localhost:8080/api/v1/task/deleteTask`,{ data: id, 
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
             })
-        }
+            await getTask()
+        }   
         catch (err) {
             console.log(err)
         }

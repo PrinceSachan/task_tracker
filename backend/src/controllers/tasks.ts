@@ -163,87 +163,87 @@ export const deleteTask: RequestHandler = async(req: MyUserRequest, res: Respons
     }
 }
 
-export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
-    try {
-        const isUserExit = await prisma.user.findUnique({
-            where: {
-                id: req.user as any
-            }
-        })
-        if(!isUserExit) {
-            return res.status(411).json({
-                message: 'User not found'
-            })
-        }
+// export const updateAllTask: RequestHandler = async(req: MyUserRequest, res: Response) => {
+//     try {
+//         const isUserExit = await prisma.user.findUnique({
+//             where: {
+//                 id: req.user as any
+//             }
+//         })
+//         if(!isUserExit) {
+//             return res.status(411).json({
+//                 message: 'User not found'
+//             })
+//         }
 
-        const allTaskUpdate = await prisma.user.update({
-            where: {
-                id: isUserExit.id
-            },
-            data: {
-                tasks: {
-                    updateMany: {
-                        where: {
-                            done: false
-                        },
-                        data: {
-                            done: true
-                        }
-                    }
-                }
-            },
-            select: {
-                tasks: true
-            }
-        })
+//         const allTaskUpdate = await prisma.user.update({
+//             where: {
+//                 id: isUserExit.id
+//             },
+//             data: {
+//                 tasks: {
+//                     updateMany: {
+//                         where: {
+//                             done: false
+//                         },
+//                         data: {
+//                             done: true
+//                         }
+//                     }
+//                 }
+//             },
+//             select: {
+//                 tasks: true
+//             }
+//         })
 
-        res.json({
-            allTaskUpdate
-        })
-    }
-    catch (err) {
-        return res.status(411).json({
-            message: `Error while updating task ${err}`
-        })
-    }
-}
+//         res.json({
+//             allTaskUpdate
+//         })
+//     }
+//     catch (err) {
+//         return res.status(411).json({
+//             message: `Error while updating task ${err}`
+//         })
+//     }
+// }
 
-export const getTasksAndUser: RequestHandler = async(req: MyUserRequest, res: Response) => {
-    try{
-        const isUserExit = await prisma.user.findUnique({
-            where: {
-                id: req.user as any
-            }
-        })
-        if(!isUserExit) {
-            return res.status(411).json({
-                message: 'User not found'
-            })
-        }
+// export const getTasksAndUser: RequestHandler = async(req: MyUserRequest, res: Response) => {
+//     try{
+//         const isUserExit = await prisma.user.findUnique({
+//             where: {
+//                 id: req.user as any
+//             }
+//         })
+//         if(!isUserExit) {
+//             return res.status(411).json({
+//                 message: 'User not found'
+//             })
+//         }
 
-        const isUser = await prisma.user.findUnique({
-            where: {
-                id: isUserExit?.id
-            },
-            include: {
-                tasks: {
-                    select: {
-                        id: true,
-                        title: true,
-                        description: true,
-                        done: true
-                    }
-                }
-            }
-        })
+//         const isUser = await prisma.user.findUnique({
+//             where: {
+//                 id: isUserExit?.id
+//             },
+//             include: {
+//                 tasks: {
+//                     select: {
+//                         id: true,
+//                         title: true,
+//                         description: true,
+//                         done: true
+//                     }
+//                 }
+//             }
+//         })
 
-        res.json({
-            isUser
-        })
-    }
-    catch (err) {
-        return res.status(411).json({
-            message: `Error while getting details ${err}`
-        })
-    }
-}
+//         res.json({
+//             isUser
+//         })
+//     }
+//     catch (err) {
+//         return res.status(411).json({
+//             message: `Error while getting details ${err}`
+//         })
+//     }
+// }
