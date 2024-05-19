@@ -1,6 +1,5 @@
 // Imports
 import { Trash2} from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     Card,
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/table"
 import { format } from 'date-fns'
 import { enIN } from "date-fns/locale";
-import { MouseEventHandler, useEffect } from "react"
+import { useEffect } from "react"
 
 
 // App imports
@@ -30,32 +29,22 @@ import AlertBox from "./Alertbox"
 const TasksBoard = () => {
     const { tasks, loading, getTask, updateTask, deleteTask } = task();
 
-    const length = tasks?.length
-   
     useEffect(() => {
         const fetchTask =  async() =>  {
             await getTask()
         }
         fetchTask()
-    }, [length])
+    }, [])
 
     function handleClick() {
         console.log('first')
     }
-
-    // async function handleDelete(id: number): Promise<any>{
-    //     await deleteTask(id)
-    // }
-
-    console.log("tasks",tasks)
-    console.log("loading",loading)
     
     if(tasks?.length === 0) return <div className="font-semibold text-xl">You don't have any task, Create a task by clicking on Add Task button</div>
     
     if(loading) return <Loader />
 
     return (
-        // <div className="h-screen">
             <>
                 <Card x-chunk="dashboard-06-chunk-0">
                     <CardHeader>
@@ -90,7 +79,7 @@ const TasksBoard = () => {
                                     <TableBody key={task.id}>
                                         <TableRow>
                                                 <TableCell className="hidden sm:table-cell">
-                                                    <Checkbox id="term" checked={task.done} onCheckedChange={async() =>{ await updateTask(task.id), window.location.reload()}} />
+                                                    <Checkbox id="term" checked={task.done} onCheckedChange={async() => await updateTask(task.id)} />
                                                 </TableCell>
                                                 <TableCell className="font-medium">
                                                         {task.title}
@@ -116,7 +105,7 @@ const TasksBoard = () => {
                                                     {format((task.createdAt), "dd MMMM yyyy HH:mm:ss", { locale: enIN })}
                                                 </TableCell>
                                                  <TableCell>
-                                                    <Trash2 size={20} onClick={async() =>{ console.log('Delete_Id:', task.id),  await deleteTask(task.id)}} />
+                                                    <Trash2 size={20} onClick={async() =>  await deleteTask(task.id)} />
                                                 </TableCell>
                                         </TableRow>
                                     </TableBody>
@@ -126,7 +115,6 @@ const TasksBoard = () => {
                     </CardContent>
                 </Card>
             </>
-        // </div>
     )
 }
 

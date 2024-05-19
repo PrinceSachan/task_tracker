@@ -22,8 +22,6 @@ export function Dashboard() {
                 <div className="flex items-center">
                   <TabsList>
                     <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="active">Pending</TabsTrigger>
-                    <TabsTrigger value="draft">Completed</TabsTrigger>
                   </TabsList>
                   <div className="ml-auto gap-2">
                     <AddtaskCard />
